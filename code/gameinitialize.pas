@@ -1,4 +1,3 @@
-{$I x3dnodes_encoding_xml.inc}
 { Game initialization.
   This unit is cross-platform.
   It will be used by the platform-specific program or library file.
@@ -14,7 +13,7 @@ implementation
 
 uses SysUtils,
   CastleWindow, CastleLog, CastleUIControls, Classes, CastleDownload,
-  X3DNodes, X3DLoad, CastleScene, CastleViewport, CastleUriUtils,
+  X3DNodes, X3DLoad, CastleScene, CastleViewport, CastleUriUtils, CastleStringUtils,
   CastleCameras
   {$region 'Castle Initialization Uses'}
   // The content here may be automatically updated by CGE editor.
@@ -40,7 +39,11 @@ begin
       RootNode := LoadNode(Stream, ExtractUriPath(Url), 'model/x3d+xml');
       Scene.Load(RootNode, true);
     finally FreeAndNil(Stream) end;}
+    //WritelnLog('filename is ' + SReadableForm(Filenames[I]));
+    //WritelnLog('filename length '+ ToStr(Length(Filenames[I])));
     Url := FilenameToUriSafe(FileNames[I]);
+    //WritelnLog('url is '+ SReadableForm(Url));
+    //WritelnLog('url length '+ToStr(Length(Url)));
     Scene.Load(Url);
 
   end;
@@ -81,7 +84,6 @@ initialization
     You should not need to do anything more in this initialization section.
     Most of your actual application initialization (in particular, any file reading)
     should happen inside ApplicationInitialize. }
-  InitializeLog;
   Application.OnInitialize := {$ifdef FPC}@{$endif}ApplicationInitialize;
 
   Window := TCastleWindow.Create(Application);
