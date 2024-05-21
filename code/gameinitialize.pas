@@ -13,7 +13,7 @@ interface
 implementation
 
 uses SysUtils,
-  CastleWindow, CastleLog, CastleUIControls, Classes,
+  CastleWindow, CastleLog, CastleUIControls, Classes, CastleDownload,
   X3DNodes, X3DLoad, CastleScene, CastleViewport, CastleUriUtils,
   CastleCameras
   {$region 'Castle Initialization Uses'}
@@ -25,20 +25,24 @@ var
   Window: TCastleWindow;
   Scene: TCastleScene;
   Viewport: TCastleViewport;
-  RootNode: TX3DRootNode;
+  //RootNode: TX3DRootNode;
   I: Integer;
   Url: string;
+  //Stream: TStream;
 
 procedure AppDropFiles(Sender: TCastleContainer; const FileNames: array of string);
 begin
-  //SceneTmp := Scene.Clone(Application);
-  //RegisterVrmlX3dModelFormat;
   for I := 0 to Length(FileNames) - 1 do
   begin
-    Url := 'file:/'+FileNames[I];
-    RootNode := LoadX3DXml(Url, false);
-    //RootNode := LoadNode(Url)
-    Scene.Load(RootNode, true);
+    { Url := FilenameToUriSafe(FileNames[I]);
+    Stream := Download(Url, [soForceMemoryStream]); // soForceMemoryStream in case model has OnLoadForceMemoryStream
+    try
+      RootNode := LoadNode(Stream, ExtractUriPath(Url), 'model/x3d+xml');
+      Scene.Load(RootNode, true);
+    finally FreeAndNil(Stream) end;}
+    Url := FilenameToUriSafe(FileNames[I]);
+    Scene.Load(Url);
+
   end;
 end;
 
@@ -77,7 +81,7 @@ initialization
     You should not need to do anything more in this initialization section.
     Most of your actual application initialization (in particular, any file reading)
     should happen inside ApplicationInitialize. }
-
+  InitializeLog;
   Application.OnInitialize := {$ifdef FPC}@{$endif}ApplicationInitialize;
 
   Window := TCastleWindow.Create(Application);
