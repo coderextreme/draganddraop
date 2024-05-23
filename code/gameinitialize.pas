@@ -39,10 +39,10 @@ begin
       RootNode := LoadNode(Stream, ExtractUriPath(Url), 'model/x3d+xml');
       Scene.Load(RootNode, true);
     finally FreeAndNil(Stream) end;}
-    //WritelnLog('filename is ' + SReadableForm(Filenames[I]));
+    WritelnLog('filename is ' + SReadableForm(Filenames[I]));
     //WritelnLog('filename length '+ ToStr(Length(Filenames[I])));
     Url := FilenameToUriSafe(FileNames[I]);
-    //WritelnLog('url is '+ SReadableForm(Url));
+    WritelnLog('url is '+ SReadableForm(Url));
     //WritelnLog('url length '+ToStr(Length(Url)));
     Scene.Load(Url);
 
@@ -62,9 +62,7 @@ begin
   {$endregion 'Castle View Creation'}
 
   Window.Container.View := ViewMain;
-{$ifndef CASTLE_WINDOW_WINAPI}
   Window.RegisterDropTarget;
-{$endif}
   Window.OnDropFiles := {$ifdef FPC}@{$endif}AppDropFiles;
   Viewport := TCastleViewport.Create(Application);
   Viewport.FullSize := true;
